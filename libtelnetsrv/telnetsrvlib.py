@@ -24,15 +24,11 @@ Various settings can affect the operation of the server:
 
 import SocketServer
 import socket
-import struct
 import sys
 import traceback
 import curses.ascii
-import curses.has_key
 import curses
 import logging
-#if not hasattr(socket, 'SHUT_RDWR'):
-#    socket.SHUT_RDWR = 2
 
 log = logging.getLogger(__name__)
 
