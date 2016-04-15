@@ -1,7 +1,7 @@
 libtelnetsrv
 ============
 
-This module is a Python3 compatible fork of Ian Epperson's excellent `telnetsrvlib <https://github.com/ianepperson/telnetsrvlib>`_
+This module is a Python3 compatible fork of Ian Epperson's excellent `telnetsrvlib <https://github.com/ianepperson/telnetsrvlib>`_.
 The original Readme is retained below, with just the library name updated.
 
 -----------------------
