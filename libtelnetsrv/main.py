@@ -500,13 +500,13 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
     def setterm(self, term):
         """Set the curses structures for this terminal"""
         log.debug("Setting termtype to %s" % (term,))
-        curses.setupterm(term)  # This will raise if the termtype is not supported
+        curses.setupterm(str(term))  # This will raise if the termtype is not supported
         self.TERM = term
         self.ESCSEQ = {}
         for k in self.KEYS.keys():
-            str = curses.tigetstr(curses.has_key._capability_names[k])
-            if str:
-                self.ESCSEQ[str] = k
+            str_ = curses.tigetstr(curses.has_key._capability_names[k])
+            if str_:
+                self.ESCSEQ[str_] = k
         # Create a copy to prevent altering the class
         self.CODES = self.CODES.copy()
         self.CODES['DEOL'] = curses.tigetstr('el')

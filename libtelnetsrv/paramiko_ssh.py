@@ -9,8 +9,7 @@ except ImportError:
 
 from paramiko import Transport, ServerInterface, RSAKey, DSSKey, SSHException, \
     AUTH_SUCCESSFUL, AUTH_FAILED, \
-    OPEN_SUCCEEDED, OPEN_FAILED_ADMINISTRATIVELY_PROHIBITED, \
-    OPEN_FAILED_UNKNOWN_CHANNEL_TYPE, OPEN_FAILED_RESOURCE_SHORTAGE
+    OPEN_SUCCEEDED, OPEN_FAILED_ADMINISTRATIVELY_PROHIBITED
 
 log = logging.getLogger(__name__)
 
@@ -28,10 +27,10 @@ def getRsaKeyFile(filename, password=None):
 class TelnetToPtyHandler(object):
     """Mixin to turn TelnetHandler into PtyHandler"""
 
-    def __init__(self):
+    def __init__(self, *args):
         self.request = None
         self.username = None
-        super(TelnetToPtyHandler, self).__init__()
+        super(TelnetToPtyHandler, self).__init__(*args)
 
     # Don't mention these, client isn't listening for them.  Blank the dicts.
     DOACK = {}
@@ -60,7 +59,10 @@ class SSHHandler(ServerInterface, BaseRequestHandler):
         # Keep track of channel information from the transport
         self.channels = {}
 
-        self.client = request._sock
+        try:
+            self.client = request._sock
+        except AttributeError as e:
+            self.client = request
         # Transport turns the socket into an SSH transport
         self.transport = Transport(self.client)
 
@@ -70,7 +72,7 @@ class SSHHandler(ServerInterface, BaseRequestHandler):
         class MixedPtyHandler(TelnetToPtyHandler, TelnetHandlerClass):
             # BaseRequestHandler does not inherit from object, must call the __init__ directly
             def __init__(self, *args):
-                super(MixedPtyHandler, self).__init__()
+                super(MixedPtyHandler, self).__init__(*args)
                 TelnetHandlerClass.__init__(self, *args)
 
         self.pty_handler = MixedPtyHandler

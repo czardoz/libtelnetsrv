@@ -17,8 +17,6 @@ parser.add_argument('-s', '--ssh', action='store_const', const=True, default=Fal
                     help="Run as SSH server using Paramiko library.")
 parser.add_argument('-g', '--green', action='store_const', const=True, default=False,
                     help="Run with cooperative multitasking using Gevent library.")
-parser.add_argument('-e', '--eventlet', action='store_const', const=True, default=False,
-                    help="Run with cooperative multitasking using Eventlet library.")
 console_args = parser.parse_args()
 
 TELNET_PORT_BINDING = console_args.port
@@ -36,13 +34,15 @@ if console_args.green:
 else:
     SERVERTYPE = 'threaded'
     # To run a threaded server, import threading and other libraries to help out.
-    import SocketServer
+    try:
+        import SocketServer as socketserver
+    except ImportError:
+        import socketserver
     import threading
-    import time
 
     from libtelnetsrv.threaded import TelnetHandler, command
 
-    # The SocketServer needs *all IPs* to be 0.0.0.0
+    # The socketserver needs *all IPs* to be 0.0.0.0
     if not TELNET_IP_BINDING:
         TELNET_IP_BINDING = '0.0.0.0'
 
@@ -55,7 +55,7 @@ else:
 # as well as the number of times this user has connected.
 
 class MyServer(object):
-    '''A simple server class that just keeps track of a connection count.'''
+    """A simple server class that just keeps track of a connection count."""
 
     def __init__(self):
         # Var to track the total connections.
@@ -65,7 +65,7 @@ class MyServer(object):
         self.user_connect = {}
 
     def new_connection(self, username):
-        '''Register a new connection by username, return the count of connections.'''
+        """Register a new connection by username, return the count of connections."""
         self.connection_count += 1
         try:
             self.user_connect[username] += 1
@@ -269,7 +269,7 @@ if __name__ == '__main__':
 
     if SERVERTYPE == 'threaded':
         # Single threaded server - only one session at a time
-        class TelnetServer(SocketServer.TCPServer):
+        class TelnetServer(socketserver.TCPServer):
             allow_reuse_address = True
 
 
