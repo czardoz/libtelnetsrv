@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import curses
 import logging
 import argparse
 
