@@ -25,14 +25,14 @@ else:
 
 if console_args.green:
     SERVERTYPE = 'green'
-    # To run a green server, import gevent and the green version of telnetsrv.
+    # To run a green server, import gevent and the green version of libtelnetsrv.
     import gevent, gevent.server
-    from telnetsrv.green import TelnetHandler, command
+    from libtelnetsrv.green import TelnetHandler, command
 elif console_args.eventlet:
     SERVERTYPE = 'eventlet'
-    # To run a eventlet server, import eventlet and the eventlet version of telnetsrv.
+    # To run a eventlet server, import eventlet and the eventlet version of libtelnetsrv.
     import eventlet
-    from telnetsrv.evtlet import TelnetHandler, command
+    from libtelnetsrv.evtlet import TelnetHandler, command
 else:
     SERVERTYPE = 'threaded'
     # To run a threaded server, import threading and other libraries to help out.
@@ -40,7 +40,7 @@ else:
     import threading
     import time
 
-    from telnetsrv.threaded import TelnetHandler, command
+    from libtelnetsrv.threaded import TelnetHandler, command
 
     # The SocketServer needs *all IPs* to be 0.0.0.0
     if not TELNET_IP_BINDING:
@@ -265,7 +265,7 @@ if __name__ == '__main__':
         if SERVERTYPE == 'eventlet':
             eventlet.monkey_patch(all=True)
 
-        from telnetsrv.paramiko_ssh import SSHHandler, getRsaKeyFile
+        from libtelnetsrv.paramiko_ssh import SSHHandler, getRsaKeyFile
 
 
         # Create the handler for SSH, register the defined handler for use as the PTY

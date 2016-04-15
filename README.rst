@@ -1,5 +1,10 @@
-telnetsrvlib
+libtelnetsrv
 ============
+
+This module is a Python3 compatible fork of Ian Epperson's excellent `telnetsrvlib <https://github.com/ianepperson/telnetsrvlib>`_
+The original Readme is retained below, with just the library name updated.
+
+-----------------------
 
 Telnet server using gevent or threading.
 
@@ -31,17 +36,17 @@ and nearly no idle processing.  The provided test server handles a large number 
 Install
 -------
 
-telnetsrv is available through the Cheeseshop.  You can use easy_install or pip to perform the installation.
+libtelnetsrv is available through the Cheeseshop.  You can use easy_install or pip to perform the installation.
 
 :: 
 
- easy_install telnetsrv
+ easy_install libtelnetsrv
 
 or
 
 ::
 
- pip install telnetsrv
+ pip install libtelnetsrv
 
 Note that there are no dependancies defined, but if you want to use the green version, you must also install gevent or eventlet.
 If you wish to use the SSH server, you must also install paramiko.
@@ -57,7 +62,7 @@ Threaded
 
 .. code:: python
 
- from telnetsrv.threaded import TelnetHandler, command
+ from libtelnetsrv.threaded import TelnetHandler, command
  class MyHandler(TelnetHandler):
     ...
 
@@ -66,7 +71,7 @@ Green
 
 .. code:: python
 
- from telnetsrv.green import TelnetHandler, command
+ from libtelnetsrv.green import TelnetHandler, command
  class MyHandler(TelnetHandler):
     ...
 
@@ -75,7 +80,7 @@ Eventlet
 
 .. code:: python
 
- from telnetsrv.evtlet import TelnetHandler, command
+ from libtelnetsrv.evtlet import TelnetHandler, command
  class MyHandler(TelnetHandler):
     ...
 
@@ -400,7 +405,7 @@ Short Example
 .. code:: python
 
  import gevent, gevent.server
- from telnetsrv.green import TelnetHandler, command
+ from libtelnetsrv.green import TelnetHandler, command
  
  class MyTelnetHandler(TelnetHandler):
      WELCOME = "Welcome to my server."
@@ -454,7 +459,7 @@ importing from ``paramiko_ssh``.
 .. code:: python
 
     from gevent import monkey; monkey.patch_all()
-    from telnetsrv.paramiko_ssh import SSHHandler, getRsaKeyFile
+    from libtelnetsrv.paramiko_ssh import SSHHandler, getRsaKeyFile
 
 Eventlet
 ++++++++
@@ -465,7 +470,7 @@ importing from ``paramiko_ssh``.
 .. code:: python
 
     import eventlet; eventlet.monkey_patch(all=True)
-    from telnetsrv.paramiko_ssh import SSHHandler, getRsaKeyFile
+    from libtelnetsrv.paramiko_ssh import SSHHandler, getRsaKeyFile
 
 
 
@@ -549,8 +554,8 @@ Short SSH Example
 
  from gevent import monkey; monkey.patch_all()
  import gevent.server
- from telnetsrv.paramiko_ssh import SSHHandler, getRsaKeyFile
- from telnetsrv.green import TelnetHandler, command
+ from libtelnetsrv.paramiko_ssh import SSHHandler, getRsaKeyFile
+ from libtelnetsrv.green import TelnetHandler, command
  
  class MyTelnetHandler(TelnetHandler):
      WELCOME = "Welcome to my server."
@@ -592,4 +597,4 @@ Short SSH Example
 Longer Example
 --------------
 
-See https://github.com/ianepperson/telnetsrvlib/blob/master/test.py
+See https://github.com/czardoz/libtelnetsrv/blob/master/test.py
