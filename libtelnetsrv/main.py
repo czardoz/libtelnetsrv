@@ -675,6 +675,7 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
 
         while True:
             c = self.getc(block=True)
+            print('C is: ', repr(c))
             c = self.ansi_to_curses(c)
             if c == theNULL:
                 continue

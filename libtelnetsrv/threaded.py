@@ -45,7 +45,7 @@ class TelnetHandler(TelnetHandlerBase):
         """Return one character from the input queue"""
         if not block:
             if not len(self.cookedq):
-                return ''
+                return b''
         while not len(self.cookedq):
             time.sleep(0.05)
         self.IQUEUELOCK.acquire()
@@ -61,10 +61,12 @@ class TelnetHandler(TelnetHandlerBase):
     def inputcooker_store_queue(self, char):
         """Put the cooked data in the input queue (with locking)"""
         self.IQUEUELOCK.acquire()
-        if type(char) in [type(()), type([]), type("")]:
+        if type(char) in [type(()), type([]), type(b"")]:
             for v in char:
+                print('Appending a new element!: ', v)
                 self.cookedq.append(v)
         else:
+            print('Appending a new char!: ', char)
             self.cookedq.append(char)
         self.IQUEUELOCK.release()
 
