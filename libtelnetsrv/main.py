@@ -499,8 +499,8 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
 
     def setterm(self, term):
         """Set the curses structures for this terminal"""
-        log.debug("Setting termtype to %s" % (term,))
-        curses.setupterm(str(term))  # This will raise if the termtype is not supported
+        log.debug("Ignoring given termtype: %s" % (term,))
+        curses.setupterm()  # This will raise if the termtype is not supported
         self.TERM = term
         self.ESCSEQ = {}
         for k in self.KEYS.keys():
