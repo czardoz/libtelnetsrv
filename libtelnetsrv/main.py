@@ -34,6 +34,8 @@ import curses.ascii
 import curses
 import logging
 
+from curses.has_key import _capability_names as capability_names
+
 log = logging.getLogger(__name__)
 
 BELL = chr(7)
@@ -504,7 +506,7 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
         self.TERM = term
         self.ESCSEQ = {}
         for k in self.KEYS.keys():
-            str_ = curses.tigetstr(curses.has_key._capability_names[k])
+            str_ = curses.tigetstr(capability_names[k])
             if str_:
                 self.ESCSEQ[str_] = k
         # Create a copy to prevent altering the class
