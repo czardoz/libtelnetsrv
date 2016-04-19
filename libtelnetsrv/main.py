@@ -735,9 +735,9 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
                 if echo is False:
                     if prompt:
                         self.write(chr(10))
-                    log.debug(b'readline: %s(hidden text)', prompt)
+                    log.debug('readline: %s(hidden text)', prompt)
                 else:
-                    log.debug(b'readline: %s%r', prompt, result)
+                    log.debug('readline: %s%r', prompt, result)
                 return result
             elif c == curses.KEY_BACKSPACE or c == chr(127) or c == chr(8):
                 if insptr > 0:
@@ -784,12 +784,12 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
 
     def writeline(self, text):
         """Send a packet with line ending."""
-        log.debug(b'writing line %r' % text)
+        log.debug('writing line %r' % text)
         self.write(text + chr(10))
 
     def writemessage(self, text):
         """Write out an asynchronous message, then reconstruct the prompt and entered text."""
-        log.debug(b'writing message %r', text)
+        log.debug('writing message %r', text)
         self.write(chr(10) + text + chr(10))
         self.write(self._current_prompt + b''.join(self._current_line))
 
