@@ -38,7 +38,7 @@ log = logging.getLogger(__name__)
 
 BELL = chr(7)
 ESC = chr(27)
-ANSI_START_SEQ = '['
+ANSI_START_SEQ = b'['
 ANSI_KEY_TO_CURSES = {
     'A': curses.KEY_UP,
     'B': curses.KEY_DOWN,
@@ -130,61 +130,61 @@ IS = chr(0)
 SEND = chr(1)
 
 CMDS = {
-    WILL: 'WILL',
-    WONT: 'WONT',
-    DO: 'DO',
-    DONT: 'DONT',
-    SE: 'Subnegotiation End',
-    NOP: 'No Operation',
-    DM: 'Data Mark',
-    BRK: 'Break',
-    IP: 'Interrupt process',
-    AO: 'Abort output',
-    AYT: 'Are You There',
-    EC: 'Erase Character',
-    EL: 'Erase Line',
-    GA: 'Go Ahead',
-    SB: 'Subnegotiation Begin',
-    BINARY: 'Binary',
-    ECHO: 'Echo',
-    RCP: 'Prepare to reconnect',
-    SGA: 'Suppress Go-Ahead',
-    NAMS: 'Approximate message size',
-    STATUS: 'Give status',
-    TM: 'Timing mark',
-    RCTE: 'Remote controlled transmission and echo',
-    NAOL: 'Negotiate about output line width',
-    NAOP: 'Negotiate about output page size',
-    NAOCRD: 'Negotiate about CR disposition',
-    NAOHTS: 'Negotiate about horizontal tabstops',
-    NAOHTD: 'Negotiate about horizontal tab disposition',
-    NAOFFD: 'Negotiate about formfeed disposition',
-    NAOVTS: 'Negotiate about vertical tab stops',
-    NAOVTD: 'Negotiate about vertical tab disposition',
-    NAOLFD: 'Negotiate about output LF disposition',
-    XASCII: 'Extended ascii character set',
-    LOGOUT: 'Force logout',
-    BM: 'Byte macro',
-    DET: 'Data entry terminal',
-    SUPDUP: 'Supdup protocol',
-    SUPDUPOUTPUT: 'Supdup output',
-    SNDLOC: 'Send location',
-    TTYPE: 'Terminal type',
-    EOR: 'End or record',
-    TUID: 'TACACS user identification',
-    OUTMRK: 'Output marking',
-    TTYLOC: 'Terminal location number',
-    VT3270REGIME: '3270 regime',
-    X3PAD: 'X.3 PAD',
-    NAWS: 'Window size',
-    TSPEED: 'Terminal speed',
-    LFLOW: 'Remote flow control',
-    LINEMODE: 'Linemode option',
-    XDISPLOC: 'X Display Location',
-    OLD_ENVIRON: 'Old - Environment variables',
-    AUTHENTICATION: 'Authenticate',
-    ENCRYPT: 'Encryption option',
-    NEW_ENVIRON: 'New - Environment variables',
+    WILL: b'WILL',
+    WONT: b'WONT',
+    DO: b'DO',
+    DONT: b'DONT',
+    SE: b'Subnegotiation End',
+    NOP: b'No Operation',
+    DM: b'Data Mark',
+    BRK: b'Break',
+    IP: b'Interrupt process',
+    AO: b'Abort output',
+    AYT: b'Are You There',
+    EC: b'Erase Character',
+    EL: b'Erase Line',
+    GA: b'Go Ahead',
+    SB: b'Subnegotiation Begin',
+    BINARY: b'Binary',
+    ECHO: b'Echo',
+    RCP: b'Prepare to reconnect',
+    SGA: b'Suppress Go-Ahead',
+    NAMS: b'Approximate message size',
+    STATUS: b'Give status',
+    TM: b'Timing mark',
+    RCTE: b'Remote controlled transmission and echo',
+    NAOL: b'Negotiate about output line width',
+    NAOP: b'Negotiate about output page size',
+    NAOCRD: b'Negotiate about CR disposition',
+    NAOHTS: b'Negotiate about horizontal tabstops',
+    NAOHTD: b'Negotiate about horizontal tab disposition',
+    NAOFFD: b'Negotiate about formfeed disposition',
+    NAOVTS: b'Negotiate about vertical tab stops',
+    NAOVTD: b'Negotiate about vertical tab disposition',
+    NAOLFD: b'Negotiate about output LF disposition',
+    XASCII: b'Extended ascii character set',
+    LOGOUT: b'Force logout',
+    BM: b'Byte macro',
+    DET: b'Data entry terminal',
+    SUPDUP: b'Supdup protocol',
+    SUPDUPOUTPUT: b'Supdup output',
+    SNDLOC: b'Send location',
+    TTYPE: b'Terminal type',
+    EOR: b'End or record',
+    TUID: b'TACACS user identification',
+    OUTMRK: b'Output marking',
+    TTYLOC: b'Terminal location number',
+    VT3270REGIME: b'3270 regime',
+    X3PAD: b'X.3 PAD',
+    NAWS: b'Window size',
+    TSPEED: b'Terminal speed',
+    LFLOW: b'Remote flow control',
+    LINEMODE: b'Linemode option',
+    XDISPLOC: b'X Display Location',
+    OLD_ENVIRON: b'Old - Environment variables',
+    AUTHENTICATION: b'Authenticate',
+    ENCRYPT: b'Encryption option',
+    NEW_ENVIRON: b'New - Environment variables',
 }
 
 
@@ -218,7 +218,7 @@ class command():
 
 class InputSimple(object):
     """Simple line handler.  All spaces become one, can have quoted parameters, but not null"""
-    quote_chars = ['"', "'"]
+    quote_chars = [b'"', b"'"]
 
     def __init__(self, handler, line):
         self.parts = []
@@ -229,7 +229,7 @@ class InputSimple(object):
         try:
             return self.parts[0]
         except IndexError:
-            return ''
+            return b''
 
     @property
     def params(self):
@@ -241,8 +241,8 @@ class InputSimple(object):
         cmdlist = [item.strip() for item in line.split()]
         idx = 0
         while idx < (len(cmdlist) - 1):
-            if cmdlist[idx][0] in ["'", '"']:
-                cmdlist[idx] = cmdlist[idx] + " " + cmdlist.pop(idx + 1)
+            if cmdlist[idx][0] in [b"'", '"']:
+                cmdlist[idx] = cmdlist[idx] + b" " + cmdlist.pop(idx + 1)
                 if cmdlist[idx][0] != cmdlist[idx][-1]:
                     continue
                 cmdlist[idx] = cmdlist[idx][1:-1]
@@ -252,15 +252,15 @@ class InputSimple(object):
 
 class InputBashLike(object):
     """Handles escaped characters, quoted parameters and multi-line input similar to Bash."""
-    quote_chars = ['"', "'"]
-    whitespace = [' ', '\t']
-    escape_char = "\\"
-    escape_results = {'\\': '\\', 't': '\t', 'n': '\n', ' ': ' ', '"': '"', "'": "'"}
-    continue_prompt = '... '
-    eol_char = '\n'
+    quote_chars = [b'"', b"'"]
+    whitespace = [b' ', b'\t']
+    escape_char = b"\\"
+    escape_results = {b'\\': b'\\', b't': b'\t', b'n': b'\n', b' ': b' ', b'"': b'"', b"'": b"'"}
+    continue_prompt = b'... '
+    eol_char = b'\n'
 
     def __init__(self, handler, line):
-        self.raw = ''
+        self.raw = b''
         self.handler = handler
         self.complete = False
         self.inquote = False
@@ -275,7 +275,7 @@ class InputBashLike(object):
         try:
             return self.parts[0]
         except IndexError:
-            return ''
+            return b''
 
     @property
     def params(self):
@@ -303,7 +303,7 @@ class InputBashLike(object):
         """Process chars while in a part"""
         if char in self.whitespace or char == self.eol_char:
             # End of the part.
-            self.parts.append(''.join(self.part))
+            self.parts.append(b''.join(self.part))
             self.part = []
             # Switch back to processing a delimiter.
             self.process_char = self.process_delimiter
@@ -350,7 +350,7 @@ class InputBashLike(object):
                 # Should always be here, but add it just in case.
                 line += self.eol_char
         except IndexError:
-            # Thrown if line == ''
+            # Thrown if line == b''
             line = self.eol_char
 
         for char in line:
@@ -391,33 +391,33 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
         NEW_ENVIRON: DO,
     }
     # Default terminal type - used if client doesn't tell us its termtype
-    TERM = "ansi"
+    TERM = b"ansi"
     # Keycode to name mapping - used to decide which keys to query
     KEYS = {  # Key escape sequences
-              curses.KEY_UP: 'Up',  # Cursor up
-              curses.KEY_DOWN: 'Down',  # Cursor down
-              curses.KEY_LEFT: 'Left',  # Cursor left
-              curses.KEY_RIGHT: 'Right',  # Cursor right
-              curses.KEY_DC: 'Delete',  # Delete right
-              curses.KEY_BACKSPACE: 'Backspace',  # Delete left
+              curses.KEY_UP: b'Up',  # Cursor up
+              curses.KEY_DOWN: b'Down',  # Cursor down
+              curses.KEY_LEFT: b'Left',  # Cursor left
+              curses.KEY_RIGHT: b'Right',  # Cursor right
+              curses.KEY_DC: b'Delete',  # Delete right
+              curses.KEY_BACKSPACE: b'Backspace',  # Delete left
               }
     # Reverse mapping of KEYS - used for cooking key codes
     ESCSEQ = {
     }
     # Terminal output escape sequences
     CODES = {
-        'DEOL': '',  # Delete to end of line
-        'DEL': '',  # Delete and close up
-        'INS': '',  # Insert space
-        'CSRLEFT': '',  # Move cursor left 1 space
-        'CSRRIGHT': '',  # Move cursor right 1 space
+        'DEOL': b'',  # Delete to end of line
+        'DEL': b'',  # Delete and close up
+        'INS': b'',  # Insert space
+        'CSRLEFT': b'',  # Move cursor left 1 space
+        'CSRRIGHT': b'',  # Move cursor right 1 space
     }
     # What prompt to display
-    PROMPT = "Telnet Server> "
+    PROMPT = b"Telnet Server> "
     # What prompt to use for requesting more input
-    CONTINUE_PROMPT = "... "
+    CONTINUE_PROMPT = b"... "
     # What to display upon connection
-    WELCOME = "You have connected to the telnet server."
+    WELCOME = b"You have connected to the telnet server."
     # The function to call to verify authentication data
     authCallback = None
     # Does authCallback want a username?
@@ -432,9 +432,9 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
     # Banner to display prior to telnet login
     TELNET_ISSUE = None
     # What prompt to use when requesting a telnet username
-    PROMPT_USER = "Username: "
+    PROMPT_USER = b"Username: "
     # What prompt to use when requesting a telnet password
-    PROMPT_PASS = "Password: "
+    PROMPT_PASS = b"Password: "
 
     # --------------------------- Environment Setup ----------------------------
 
@@ -455,10 +455,10 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
         # What commands does this CLI support
         self.COMMANDS = {}
         self.sock = None  # TCP socket
-        self.rawq = ''  # Raw input string
-        self.sbdataq = ''  # Sub-Neg string
+        self.rawq = b''  # Raw input string
+        self.sbdataq = b''  # Sub-Neg string
         self.eof = 0  # Has EOF been reached?
-        self.iacseq = ''  # Buffer for IAC sequence.
+        self.iacseq = b''  # Buffer for IAC sequence.
         self.sb = 0  # Flag for SB and SE sequence.
         self.history = []  # Command history
         self.RUNSHELL = True
@@ -469,14 +469,14 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
             try:
                 name = method.command_name
             except:
-                if k[:3] == 'cmd':
+                if k[:3] == b'cmd':
                     name = k[3:]
                 else:
                     continue
 
             name = name.upper()
             self.COMMANDS[name] = method
-            for alias in getattr(method, "aliases", []):
+            for alias in getattr(method, 'aliases', []):
                 self.COMMANDS[alias.upper()] = self.COMMANDS[name]
 
         socketserver.BaseRequestHandler.__init__(self, request, client_address, server)
@@ -588,7 +588,7 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
                 self.writecooked(IAC + cmd + opt)
         elif cmd in [WILL, WONT]:
             if opt not in self.WILLOPTS:
-                self.WILLOPTS[opt] = ''
+                self.WILLOPTS[opt] = b''
             if (((cmd == WILL) and (self.WILLOPTS[opt] is not True))
                     or ((cmd == WONT) and (self.WILLOPTS[opt] is not False))):
                 self.WILLOPTS[opt] = (cmd == WILL)
@@ -605,7 +605,7 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
 
         """
         buf = self.sbdataq
-        self.sbdataq = ''
+        self.sbdataq = b''
         return buf
 
     # ---------------------------- Input Functions -----------------------------
@@ -624,13 +624,13 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
         if not self._readline_do_echo(echo):
             return
         # Write out the remainder of the line
-        self.write(char + ''.join(line[insptr:]))
+        self.write(char + b''.join(line[insptr:]))
         # Cursor Left to the current insert point
         char_count = len(line) - insptr
         self.write(self.CODES['CSRLEFT'] * char_count)
 
-    _current_line = ''
-    _current_prompt = ''
+    _current_line = b''
+    _current_prompt = b''
 
     def ansi_to_curses(self, char):
         """Handles reading ANSI escape sequences"""
@@ -651,7 +651,7 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
             self._readline_echo(BELL, True)
             return theNULL
 
-    def readline(self, echo=None, prompt='', use_history=True):
+    def readline(self, echo=None, prompt=b'', use_history=True):
         """Return a line of text, including the terminating LF
            If echo is true always echo, if echo is false never echo
            If echo is None follow the negotiated setting.
@@ -667,9 +667,9 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
             self.write(prompt)
             self._current_prompt = prompt
         else:
-            self._current_prompt = ''
+            self._current_prompt = b''
 
-        self._current_line = ''
+        self._current_line = b''
 
         while True:
             c = self.getc(block=True)
@@ -713,33 +713,33 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
                 for char in range(insptr):
                     self._readline_echo(self.CODES['CSRLEFT'], echo)
                 self._readline_echo(self.CODES['DEOL'], echo)
-                self._readline_echo(''.join(line), echo)
+                self._readline_echo(b''.join(line), echo)
                 insptr = len(line)
                 continue
             elif c == chr(3):
-                self._readline_echo('\n' + curses.ascii.unctrl(c) + ' ABORT\n', echo)
-                return ''
+                self._readline_echo(b'\n' + curses.ascii.unctrl(c) + b' ABORT\n', echo)
+                return b''
             elif c == chr(4):
                 if len(line) > 0:
-                    self._readline_echo('\n' + curses.ascii.unctrl(c) + ' ABORT (QUIT)\n', echo)
-                    return ''
-                self._readline_echo('\n' + curses.ascii.unctrl(c) + ' QUIT\n', echo)
-                return 'QUIT'
+                    self._readline_echo(b'\n' + curses.ascii.unctrl(c) + b' ABORT (QUIT)\n', echo)
+                    return b''
+                self._readline_echo(b'\n' + curses.ascii.unctrl(c) + b' QUIT\n', echo)
+                return b'QUIT'
             elif c == chr(10):
                 self._readline_echo(c, echo)
-                result = ''.join(line)
+                result = b''.join(line)
                 if use_history:
                     self.history.append(result)
                 if echo is False:
                     if prompt:
                         self.write(chr(10))
-                    log.debug('readline: %s(hidden text)', prompt)
+                    log.debug(b'readline: %s(hidden text)', prompt)
                 else:
-                    log.debug('readline: %s%r', prompt, result)
+                    log.debug(b'readline: %s%r', prompt, result)
                 return result
             elif c == curses.KEY_BACKSPACE or c == chr(127) or c == chr(8):
                 if insptr > 0:
-                    self._readline_echo(self.CODES['CSRLEFT'] + self.CODES['DEL'], echo)
+                    self._readline_echo(self.CODES[b'CSRLEFT'] + self.CODES[b'DEL'], echo)
                     insptr -= 1
                     del line[insptr]
                 else:
@@ -747,7 +747,7 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
                 continue
             elif c == curses.KEY_DC:
                 if insptr < len(line):
-                    self._readline_echo(self.CODES['DEL'], echo)
+                    self._readline_echo(self.CODES[b'DEL'], echo)
                     del line[insptr]
                 else:
                     self._readline_echo(BELL, echo)
@@ -782,14 +782,14 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
 
     def writeline(self, text):
         """Send a packet with line ending."""
-        log.debug('writing line %r' % text)
+        log.debug(b'writing line %r' % text)
         self.write(text + chr(10))
 
     def writemessage(self, text):
         """Write out an asynchronous message, then reconstruct the prompt and entered text."""
-        log.debug('writing message %r', text)
+        log.debug(b'writing message %r', text)
         self.write(chr(10) + text + chr(10))
-        self.write(self._current_prompt + ''.join(self._current_line))
+        self.write(self._current_prompt + b''.join(self._current_line))
 
     def write(self, text):
         """Send a packet to the socket. This function cooks output."""
@@ -813,7 +813,7 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
             return ret
         if not block:
             if not self.inputcooker_socket_ready():
-                return ''
+                return b''
         ret = self.sock.recv(20)
         self.eof = not ret
         self.rawq = self.rawq + ret
@@ -860,7 +860,7 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
                         continue
                     elif c == chr(13) and not self.sb:
                         c2 = self._inputcooker_getc(block=False)
-                        if c2 == theNULL or c2 == '':
+                        if c2 == theNULL or c2 == b'':
                             c = chr(10)
                         elif c2 == chr(10):
                             c = c2
@@ -888,13 +888,13 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
                     if c in (DO, DONT, WILL, WONT):
                         self.iacseq += c
                         continue
-                    self.iacseq = ''
+                    self.iacseq = b''
                     if c == IAC:
                         self._inputcooker_store(c)
                     else:
                         if c == SB:  # SB ... SE start.
                             self.sb = 1
-                            self.sbdataq = ''
+                            self.sbdataq = b''
                         elif c == SE:  # SB ... SE end.
                             self.sb = 0
                         # Callback is supposed to look into
@@ -902,7 +902,7 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
                         self.options_handler(self.sock, c, NOOPT)
                 elif len(self.iacseq) == 2:
                     cmd = self.iacseq[1]
-                    self.iacseq = ''
+                    self.iacseq = b''
                     if cmd in (DO, DONT, WILL, WONT):
                         self.options_handler(self.sock, cmd, c)
         except (EOFError, socket.error):
@@ -927,11 +927,11 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
                 method = self.COMMANDS[cmd]
                 doc = method.__doc__.split("\n")
                 docp = doc[0].strip()
-                docl = '\n'.join([l.strip() for l in doc[2:]])
+                docl = b'\n'.join([l.strip() for l in doc[2:]])
                 if not docl.strip():  # If there isn't anything here, use line 1
                     docl = doc[1].strip()
                 self.writeline(
-                    "%s %s\n\n%s" % (
+                    b"%s %s\n\n%s" % (
                         cmd,
                         docp,
                         docl,
@@ -939,9 +939,9 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
                 )
                 return
             else:
-                self.writeline("Command '%s' not known" % cmd)
+                self.writeline(b"Command '%s' not known" % cmd)
         else:
-            self.writeline("Help on built in commands\n")
+            self.writeline(b"Help on built in commands\n")
         keys = [k for k in self.COMMANDS.keys()]
         keys.sort()
         for cmd in keys:
@@ -949,48 +949,48 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
             if getattr(method, 'hidden', False):
                 continue
             if method.__doc__ is None:
-                self.writeline("no help for command %s" % method)
+                self.writeline(b"no help for command %s" % method)
                 return
-            doc = method.__doc__.split("\n")
+            doc = method.__doc__.split(b"\n")
             docp = doc[0].strip()
             docs = doc[1].strip()
             if len(docp) > 0:
-                docps = "%s - %s" % (docp, docs,)
+                docps = b"%s - %s" % (docp, docs,)
             else:
-                docps = "- %s" % (docs,)
+                docps = b"- %s" % (docs,)
             self.writeline(
-                "%s %s" % (
+                b"%s %s" % (
                     cmd,
                     docps,
                 )
             )
 
-    cmdHELP.aliases = ['?']
+    cmdHELP.aliases = [b'?']
 
     def cmdEXIT(self, params):
         """
         Exit the command shell
         """
         self.RUNSHELL = False
-        self.writeline("Goodbye")
+        self.writeline(b"Goodbye")
 
-    cmdEXIT.aliases = ['QUIT', 'BYE', 'LOGOUT']
+    cmdEXIT.aliases = [b'QUIT', b'BYE', b'LOGOUT']
 
     def cmdHISTORY(self, params):
         """
         Display the command history
         """
         cnt = 0
-        self.writeline('Command history\n')
+        self.writeline(b'Command history\n')
         for line in self.history:
             cnt = cnt + 1
-            self.writeline("%-5d : %s" % (cnt, ''.join(line)))
+            self.writeline(b"%-5d : %s" % (cnt, b''.join(line)))
 
             # ----------------------- Command Line Processor Engine --------------------
 
     def handleException(self, exc_type, exc_param, exc_tb):
         "Exception handler (False to abort)"
-        self.writeline(''.join(traceback.format_exception(exc_type, exc_param, exc_tb)))
+        self.writeline(b''.join(traceback.format_exception(exc_type, exc_param, exc_tb)))
         return True
 
     def authentication_ok(self):
@@ -1003,7 +1003,7 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
             if self.authNeedPass:
                 password = self.readline(echo=False, prompt=self.PROMPT_PASS, use_history=False)
                 if self.DOECHO:
-                    self.write("\n")
+                    self.write(b"\n")
             try:
                 self.authCallback(username, password)
             except:
