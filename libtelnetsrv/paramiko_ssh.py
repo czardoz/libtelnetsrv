@@ -10,6 +10,7 @@ except ImportError:
 from paramiko import Transport, ServerInterface, RSAKey, DSSKey, SSHException, \
     AUTH_SUCCESSFUL, AUTH_FAILED, \
     OPEN_SUCCEEDED, OPEN_FAILED_ADMINISTRATIVELY_PROHIBITED
+from libtelnetsrv.constants import IS_PYTHON2
 
 log = logging.getLogger(__name__)
 
@@ -30,7 +31,10 @@ class TelnetToPtyHandler(object):
     def __init__(self, *args):
         self.request = None
         self.username = None
-        super(TelnetToPtyHandler, self).__init__(*args)
+        if IS_PYTHON2:
+            super(TelnetToPtyHandler, self).__init__()
+        else:
+            super(TelnetToPtyHandler, self).__init__(*args)
 
     # Don't mention these, client isn't listening for them.  Blank the dicts.
     DOACK = {}
