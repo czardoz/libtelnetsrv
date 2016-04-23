@@ -7,11 +7,13 @@ import select
 
 from libtelnetsrv.main import TelnetHandlerBase, command
 
+
 class TelnetHandler(TelnetHandlerBase):
-    "A telnet server handler using Threading"
+    """A telnet server handler using Threading"""
+
     def __init__(self, request, client_address, server):
         # This is the cooked input stream (list of charcodes)
-        self.cookedq = []   
+        self.cookedq = []
 
         # Create the locks for handing the input/output queues
         self.IQUEUELOCK = threading.Lock()
@@ -19,7 +21,7 @@ class TelnetHandler(TelnetHandlerBase):
 
         # Call the base class init method
         TelnetHandlerBase.__init__(self, request, client_address, server)
-        
+
     def setup(self):
         '''Called after instantiation'''
         TelnetHandlerBase.setup(self)
@@ -28,16 +30,14 @@ class TelnetHandler(TelnetHandlerBase):
         self.thread_ic.setDaemon(True)
         self.thread_ic.start()
         # Note that inputcooker exits on EOF
-        
+
         # Sleep for 0.5 second to allow options negotiation
         time.sleep(0.5)
-        
 
     def finish(self):
         '''Called as the session is ending'''
         TelnetHandlerBase.finish(self)
         # Might want to ensure the thread_ic is dead
-
 
     # -- Threaded input handling functions --
 
@@ -70,7 +70,6 @@ class TelnetHandler(TelnetHandlerBase):
             self.cookedq.append(char)
         self.IQUEUELOCK.release()
 
-
     # -- Threaded output handling functions --
 
     def writemessage(self, text):
@@ -81,11 +80,10 @@ class TelnetHandler(TelnetHandlerBase):
         self.IQUEUELOCK.acquire()
         TelnetHandlerBase.writemessage(self, text)
         self.IQUEUELOCK.release()
-    
+
     def writecooked(self, text):
         """Put data directly into the output queue"""
         # Ensure this is the only thread writing
         self.OQUEUELOCK.acquire()
         TelnetHandlerBase.writecooked(self, text)
         self.OQUEUELOCK.release()
-
