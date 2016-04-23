@@ -23,7 +23,7 @@ class TelnetHandler(TelnetHandlerBase):
         TelnetHandlerBase.__init__(self, request, client_address, server)
 
     def setup(self):
-        '''Called after instantiation'''
+        """Called after instantiation"""
         TelnetHandlerBase.setup(self)
         # Spawn a thread to handle socket input
         self.thread_ic = threading.Thread(target=self.inputcooker)
@@ -35,7 +35,7 @@ class TelnetHandler(TelnetHandlerBase):
         time.sleep(0.5)
 
     def finish(self):
-        '''Called as the session is ending'''
+        """Called as the session is ending"""
         TelnetHandlerBase.finish(self)
         # Might want to ensure the thread_ic is dead
 

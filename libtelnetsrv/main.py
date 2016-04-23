@@ -675,11 +675,14 @@ class TelnetHandlerBase(socketserver.BaseRequestHandler):
 
         while True:
             c = self.getc(block=True)
-            print('C is: ', repr(c))
+
+            # In Python3, c is an int, because it is read from a `bytes` object.
+            if type(c) is int:
+                c = chr(c)
+
             c = self.ansi_to_curses(c)
             if c == theNULL:
                 continue
-
             elif c == curses.KEY_LEFT:
                 if insptr > 0:
                     insptr -= 1
